@@ -2,10 +2,20 @@ name: DevSecOps Pipeline
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
   pull_request:
-    branches: [main]
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: write
+  security-events: write
+
+env:
+  IMAGE_NAME: secure-devsecops-pipeline
 
 jobs:
 
@@ -14,9 +24,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
@@ -25,21 +37,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Ruff
-        run: |
-          python -m ruff check .
+      - name: Ruff Lint
+        run: python -m ruff check .
 
-      - name: Run Unit Tests
-        run: |
-          python -m pytest
+      - name: Unit Tests
+        run: python -m pytest
 
-      - name: Run Bandit
-        run: |
-          python -m bandit -r app
+      - name: Bandit Scan
+        run: python -m bandit -r app
 
-      - name: Run Dependency Scan
-        run: |
-          pip-audit
+      - name: Dependency Scan
+        run: pip-audit
 
   secret-scan:
     name: Secret Detection
@@ -56,44 +64,83 @@ jobs:
     needs:
       - code-quality
       - secret-scan
+
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build Docker Image
+      - name: Build Image
         run: |
-          docker build -t secure-app .
+          docker build -t $IMAGE_NAME .
 
-      - name: Save Docker Image
+      - name: Save Image
         run: |
-          docker save secure-app -o secure-app.tar
+          docker save $IMAGE_NAME -o image.tar
 
-      - name: Upload Docker Image
+      - name: Upload Image Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: secure-app-image
-          path: secure-app.tar
+          name: docker-image
+          path: image.tar
 
   trivy-scan:
     name: Container Security Scan
     needs: docker-build
+
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/download-artifact@v4
+
+      - name: Download Docker Image
+        uses: actions/download-artifact@v4
         with:
-          name: secure-app-image
+          name: docker-image
 
       - name: Load Docker Image
         run: |
-          docker load -i secure-app.tar
+          docker load -i image.tar
 
-      - name: Run Trivy
+      - name: Run Trivy Scan
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: secure-app
+          image-ref: ${{ env.IMAGE_NAME }}
           format: table
-          exit-code: "1"
+          severity: HIGH,CRITICAL
           ignore-unfixed: true
-          severity: "HIGH,CRITICAL"
+          exit-code: "1"
+
+  publish-ghcr:
+    name: Publish Image to GHCR
+
+    needs: trivy-scan
+
+    if: github.event_name == 'push'
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Download Docker Image
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-image
+
+      - name: Load Docker Image
+        run: |
+          docker load -i image.tar
+
+      - name: Login to GHCR
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io \
+            -u ${{ github.actor }} \
+            --password-stdin
+
+      - name: Tag Image
+        run: |
+          docker tag $IMAGE_NAME \
+          ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME:latest
+
+      - name: Push Image
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME:latest
