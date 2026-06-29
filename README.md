@@ -203,38 +203,6 @@ flowchart TD
     style K fill:#7C3AED,color:#fff
     style L fill:#3B6D11,color:#fff
 ```
-## 📋 Pipeline Execution Timeline
-
-```text
-Developer Push / Pull Request
-            │
-            ▼
-GitHub Actions Workflow
-            │
-            ▼
-Ruff (Linting)
-            │
-            ▼
-Pytest (Unit Tests)
-            │
-            ▼
-Bandit (SAST)
-            │
-            ▼
-pip-audit (Dependency Scan)
-            │
-            ▼
-Gitleaks (Secret Detection)
-            │
-            ▼
-Docker Image Build
-            │
-            ▼
-Trivy (Container Scan)
-            │
-            ▼
-Publish to GitHub Container Registry (GHCR)
-```
 
 ```mermaid
 flowchart LR
@@ -518,6 +486,41 @@ flowchart TD
     style G fill:#7C3AED,color:#fff,stroke:#5B21B6
     style H fill:#3B6D11,color:#fff,stroke:#27500A
 ```
+
+## 📋 Pipeline Execution Timeline
+
+```text
+Developer Push / Pull Request
+            │
+            ▼
+GitHub Actions Workflow
+            │
+            ▼
+Ruff (Linting)
+            │
+            ▼
+Pytest (Unit Tests)
+            │
+            ▼
+Bandit (SAST)
+            │
+            ▼
+pip-audit (Dependency Scan)
+            │
+            ▼
+Gitleaks (Secret Detection)
+            │
+            ▼
+Docker Image Build
+            │
+            ▼
+Trivy (Container Scan)
+            │
+            ▼
+Publish to GitHub Container Registry (GHCR)
+```
+
+
 ---
 
 ## 📦 Workflow Jobs
