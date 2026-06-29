@@ -1,0 +1,30 @@
+Safety 3.8.1 scanning C:\Users\allin\Desktop\secure-devsecops-pipeline
+2026-06-29 06:46:49 UTC
+
+Account: Ai Eshan, allinonetoolsai@gmail.com 
+ Git branch: master
+ Environment: development
+ Scan policy: None, using Safety CLI default policies
+
+Python detected. Found 1 Python requirement file, 1 Python environment and 2 Python pyproject.toml files
+
+Dependency vulnerabilities detected:
+
+[EDIT] requirements.txt:
+
+ nltk==3.9.4 [1 vulnerability found]                                                                                                                       
+  -> Vuln ID SFTY-20260616-58930: CVE-2026-54293, CVSS Severity HIGH                                                                                       
+     Affected versions of the Natural Language Toolkit (NLTK) package are vulnerable to Path Traversal due to impro...                                     
+ No known fix for nltk==3.9.4 to fix 1 vulnerability                                                                                                       
+ Learn more: https://data.safetycli.com/p/pypi/nltk/eda/?from=3.9.4&to=                                                                                    
+
++ venv\pyvenv.cfg: No issues found.
+
++ venv\Lib\site-packages\stevedore\example\pyproject.toml: No issues found.
+
++ venv\Lib\site-packages\stevedore\example2\pyproject.toml: No issues found.
+
+Tested 110 dependencies for security issues using default Safety CLI policies
+11 vulnerabilities found, 10 ignored due to policy.
+0 fixes suggested, resolving 0 vulnerabilities.
+
