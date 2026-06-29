@@ -25,18 +25,37 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Run Ruff
+        run: |
+          python -m ruff check .
+
       - name: Run Unit Tests
-        run: python -m pytest
+        run: |
+          python -m pytest
 
       - name: Run Bandit
-        run: python -m bandit -r app
+        run: |
+          python -m bandit -r app
 
       - name: Run Dependency Scan
-        run: pip-audit
+        run: |
+          pip-audit
+
+  secret-scan:
+    name: Secret Detection
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
 
   docker-build:
     name: Build Docker Image
-    needs: code-quality
+    needs:
+      - code-quality
+      - secret-scan
     runs-on: ubuntu-latest
 
     steps:
