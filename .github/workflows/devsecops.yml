@@ -4,18 +4,15 @@ on:
   push:
     branches:
       - main
-
   pull_request:
     branches:
       - main
 
 jobs:
   security-pipeline:
-
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -33,20 +30,23 @@ jobs:
         run: |
           python -m pytest
 
-      - name: Run Bandit
+      - name: Run Bandit (SAST)
         run: |
-          bandit -r app
+          python -m bandit -r app
 
-      - name: Run Safety
+      - name: Run pip-audit (Dependency Scan)
         run: |
-          safety scan
+          pip-audit
 
       - name: Build Docker Image
         run: |
           docker build -t secure-app .
 
       - name: Run Trivy Scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: secure-app
           format: table
+          exit-code: "1"
+          ignore-unfixed: true
+          severity: "CRITICAL,HIGH"
