@@ -2,22 +2,21 @@ name: DevSecOps Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
-  security-pipeline:
+
+  code-quality:
+    name: Code Quality & Security
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
@@ -27,26 +26,55 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Unit Tests
-        run: |
-          python -m pytest
+        run: python -m pytest
 
-      - name: Run Bandit (SAST)
-        run: |
-          python -m bandit -r app
+      - name: Run Bandit
+        run: python -m bandit -r app
 
-      - name: Run pip-audit (Dependency Scan)
-        run: |
-          pip-audit
+      - name: Run Dependency Scan
+        run: pip-audit
+
+  docker-build:
+    name: Build Docker Image
+    needs: code-quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Build Docker Image
         run: |
           docker build -t secure-app .
 
-      - name: Run Trivy Scan
+      - name: Save Docker Image
+        run: |
+          docker save secure-app -o secure-app.tar
+
+      - name: Upload Docker Image
+        uses: actions/upload-artifact@v4
+        with:
+          name: secure-app-image
+          path: secure-app.tar
+
+  trivy-scan:
+    name: Container Security Scan
+    needs: docker-build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: secure-app-image
+
+      - name: Load Docker Image
+        run: |
+          docker load -i secure-app.tar
+
+      - name: Run Trivy
         uses: aquasecurity/trivy-action@master
         with:
-            image-ref: secure-app
-            format: table
-            exit-code: "1"
-            ignore-unfixed: true
-            severity: "HIGH,CRITICAL"
+          image-ref: secure-app
+          format: table
+          exit-code: "1"
+          ignore-unfixed: true
+          severity: "HIGH,CRITICAL"
