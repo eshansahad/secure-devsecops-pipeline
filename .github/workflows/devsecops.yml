@@ -2,17 +2,14 @@ name: DevSecOps Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 permissions:
   contents: read
   packages: write
-  security-events: write
 
 env:
   IMAGE_NAME: secure-devsecops-pipeline
@@ -24,11 +21,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
@@ -37,17 +32,21 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Ruff Lint
-        run: python -m ruff check .
+      - name: Run Ruff
+        run: |
+          python -m ruff check .
 
-      - name: Unit Tests
-        run: python -m pytest
+      - name: Run Unit Tests
+        run: |
+          python -m pytest
 
-      - name: Bandit Scan
-        run: python -m bandit -r app
+      - name: Run Bandit
+        run: |
+          python -m bandit -r app
 
-      - name: Dependency Scan
-        run: pip-audit
+      - name: Run Dependency Scan
+        run: |
+          pip-audit
 
   secret-scan:
     name: Secret Detection
@@ -64,71 +63,55 @@ jobs:
     needs:
       - code-quality
       - secret-scan
-
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build Image
+      - name: Build Docker Image
         run: |
           docker build -t $IMAGE_NAME .
 
-      - name: Save Image
+      - name: Save Docker Image
         run: |
-          docker save $IMAGE_NAME -o image.tar
+          docker save $IMAGE_NAME -o secure-app.tar
 
-      - name: Upload Image Artifact
+      - name: Upload Docker Image
         uses: actions/upload-artifact@v4
         with:
-          name: docker-image
-          path: image.tar
+          name: secure-app-image
+          path: secure-app.tar
 
   trivy-scan:
     name: Container Security Scan
     needs: docker-build
-
     runs-on: ubuntu-latest
 
     steps:
-
-      - name: Download Docker Image
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
-          name: docker-image
+          name: secure-app-image
 
       - name: Load Docker Image
         run: |
-          docker load -i image.tar
+          docker load -i secure-app.tar
 
-      - name: Run Trivy Scan
+      - name: Run Trivy
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ env.IMAGE_NAME }}
           format: table
-          severity: HIGH,CRITICAL
-          ignore-unfixed: true
           exit-code: "1"
+          ignore-unfixed: true
+          severity: "HIGH,CRITICAL"
 
   publish-ghcr:
     name: Publish Image to GHCR
-
     needs: trivy-scan
-
-    if: github.event_name == 'push'
-
     runs-on: ubuntu-latest
 
     steps:
-
-      - name: Download Docker Image
-        uses: actions/download-artifact@v4
-        with:
-          name: docker-image
-
-      - name: Load Docker Image
-        run: |
-          docker load -i image.tar
+      - uses: actions/checkout@v4
 
       - name: Login to GHCR
         run: |
@@ -136,11 +119,34 @@ jobs:
             -u ${{ github.actor }} \
             --password-stdin
 
+      - name: Build Docker Image
+        run: |
+          docker build -t $IMAGE_NAME .
+
       - name: Tag Image
         run: |
-          docker tag $IMAGE_NAME \
-          ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME:latest
+          docker tag $IMAGE_NAME ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
 
       - name: Push Image
         run: |
-          docker push ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME:latest
+          docker push ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
+
+  azure-deploy:
+    name: Deploy to Azure Container Apps
+    needs: publish-ghcr
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy Latest Image
+        run: |
+          az containerapp update \
+            --name secure-devsecops-app \
+            --resource-group RG-DevSecOpsLab \
+            --image ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
