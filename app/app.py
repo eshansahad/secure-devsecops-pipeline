@@ -14,5 +14,8 @@ def health():
 def version():
     return jsonify({"version": "1.0.0"})
 
+import os
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)  # nosec B104
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)  # nosec B104
