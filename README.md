@@ -10,8 +10,13 @@
 ![pip-audit](https://img.shields.io/badge/pip--audit-Dependency%20Scan-orange)
 ![Trivy](https://img.shields.io/badge/Trivy-Container%20Security-blue)
 ![CI](https://github.com/eshansahad/secure-devsecops-pipeline/actions/workflows/devsecops.yml/badge.svg)
+![Ruff](https://img.shields.io/badge/Ruff-Code%20Quality-green)
+![Pytest](https://img.shields.io/badge/Pytest-Unit%20Testing-blue)
 ![Gitleaks](https://img.shields.io/badge/Gitleaks-Secrets-green)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
+![Azure](https://img.shields.io/badge/Azure-Container%20Apps-0078D4?logo=microsoftazure&logoColor=white)
+![GitHub Container Registry](https://img.shields.io/badge/GitHub%20Container%20Registry-GHCR)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-success?logo=microsoftazure)](https://secure-devsecops-app.blackfield-a8a2cad4.centralindia.azurecontainerapps.io)
 
 </p>
 
@@ -19,9 +24,9 @@
 
 ## 📖 Project Overview
 
-**Secure DevSecOps Pipeline** is an end-to-end DevSecOps project demonstrating secure software development practices using Python, Flask, Docker, GitHub Actions, and modern security tools.
+Secure DevSecOps Pipeline is a production-style DevSecOps project demonstrating how modern software can be securely built, tested, scanned, containerized, published, and automatically deployed to the cloud.
 
-The project implements a complete Continuous Integration (CI) pipeline where every code change is automatically:
+The project implements **Continuous Integration (CI)** and **Continuous Deployment (CD)** using **GitHub Actions**, **Docker**, **GitHub Container Registry (GHCR)**, and **Azure Container Apps**. Every code change is automatically validated through multiple security and quality checks before being deployed to a live Azure environment.
 
 * Checked for code quality
 * Tested with unit tests
@@ -30,16 +35,42 @@ The project implements a complete Continuous Integration (CI) pipeline where eve
 * Built into a Docker image
 * Scanned for container vulnerabilities
 * Published to GitHub Container Registry (GHCR)
+* Automatically deployed to Azure Container Apps
 
-The primary goal of this project is to demonstrate **Shift-Left Security**, where security is integrated throughout the Software Development Life Cycle (SDLC) rather than being performed only before deployment.
+The primary goal of this project is to demonstrate how modern DevSecOps practices—including Shift-Left Security, Continuous Integration (CI), and Continuous Deployment (CD)—can be combined to deliver secure applications to the cloud through an automated pipeline.
+
+---
+
+## ⭐ Project Highlights
+
+- ✅ End-to-End DevSecOps CI/CD Pipeline
+- ✅ Multi-stage Security Scanning
+- ✅ Automated Docker Image Publishing
+- ✅ GitHub Container Registry (GHCR)
+- ✅ Microsoft Azure Container Apps Deployment
+- ✅ Continuous Integration (CI)
+- ✅ Continuous Deployment (CD)
+- ✅ Production-style GitHub Actions Workflow
 
 ---
 
 ## 💡 Why This Project?
 
-Modern software development requires security to be integrated throughout the development lifecycle rather than treated as a final step. This project demonstrates how DevSecOps practices can be implemented in a real-world Python application by automating code quality checks, testing, vulnerability scanning, secret detection, container security, and image publishing using GitHub Actions.
+Modern software development requires security to be integrated throughout the Software Development Lifecycle (SDLC) instead of being treated as a final checkpoint.
 
-The primary objective is to showcase a practical implementation of **Shift-Left Security**, ensuring that every code change is verified before reaching production.
+This project demonstrates a complete **Shift-Left DevSecOps** workflow where every code change is automatically:
+
+- Linted
+- Tested
+- Security Scanned
+- Dependency Scanned
+- Secret Scanned
+- Containerized
+- Container Security Scanned
+- Published to GitHub Container Registry
+- Automatically Deployed to Azure Container Apps
+
+The result is a fully automated CI/CD pipeline that follows modern DevSecOps practices.
 
 ---
 
@@ -56,8 +87,10 @@ The primary objective is to showcase a practical implementation of **Shift-Left 
 - [Running with Docker](#-running-with-docker)
 - [Running with Docker Compose](#-running-with-docker-compose)
 - [Running Tests](#-running-tests)
+- [Deployment](#️-deployment)
 - [Security Scans](#-security-scans)
 - [CI/CD Pipeline](#️-cicd-pipeline)
+- [Version History](#-version-history)
 - [Project Demonstration](#-project-demonstration)
 - [Project Outcomes](#-project-outcomes)
 - [Lessons Learned](#-lessons-learned)
@@ -75,20 +108,23 @@ The primary objective is to showcase a practical implementation of **Shift-Left 
 * Build and publish Docker images automatically
 * Demonstrate secure software delivery using GitHub Actions
 
-## ✨ Features
+## ✨ Key Features
 
-| Feature                                        | Description                                                                             |
-| ---------------------------------------------- | --------------------------------------------------------------------------------------- |
-| 🚀 Automated CI Pipeline                       | Every push or pull request automatically triggers the complete DevSecOps workflow.      |
-| 🧪 Unit Testing                                | Automated testing using **Pytest** ensures application functionality before deployment. |
-| 🔍 Code Quality Analysis                       | **Ruff** checks Python code for style issues, errors, and best practices.               |
-| 🛡️ Static Application Security Testing (SAST) | **Bandit** scans the source code for common security vulnerabilities.                   |
-| 📦 Dependency Vulnerability Scanning           | **pip-audit** identifies known vulnerabilities in Python dependencies.                  |
-| 🔑 Secret Detection                            | **Gitleaks** prevents accidental exposure of API keys, passwords, and secrets.          |
-| 🐳 Docker Containerization                     | The application is packaged into a lightweight Docker container for portability.        |
-| 🔎 Container Security Scanning                 | **Trivy** scans Docker images for operating system and package vulnerabilities.         |
-| 📤 GitHub Container Registry (GHCR)            | Successfully scanned Docker images are automatically published to GHCR.                 |
-| ⚡ Multi-Job GitHub Actions Workflow            | Independent jobs improve maintainability and parallel execution of security checks.     |
+| Feature | Description |
+|---|---|
+| 🚀 Automated CI pipeline | Every push or pull request automatically triggers the complete DevSecOps workflow. |
+| 🧪 Unit testing | Automated testing using **Pytest** ensures application functionality before deployment. |
+| 🔍 Code quality analysis | **Ruff** checks Python code for style issues, errors, and best practices. |
+| 🛡️ Static application security testing (SAST) | **Bandit** scans the source code for common security vulnerabilities. |
+| 📦 Dependency vulnerability scanning | **pip-audit** identifies known vulnerabilities in Python dependencies. |
+| 🔑 Secret detection | **Gitleaks** prevents accidental exposure of API keys, passwords, and secrets. |
+| 🐳 Docker containerization | The application is packaged into a lightweight Docker container for portability. |
+| 🔎 Container security scanning | **Trivy** scans Docker images for operating system and package vulnerabilities. |
+| 📤 GitHub Container Registry (GHCR) | Successfully scanned Docker images are automatically published to GHCR. |
+| ⚡ Multi-job GitHub Actions workflow | Independent jobs improve maintainability and parallel execution of security checks. |
+| ☁️ Azure Container Apps | Automatic deployment of the application to Microsoft Azure. |
+| 🔄 Continuous deployment | Every successful workflow automatically updates the live Azure application. |
+| 🌍 Live cloud hosting | Publicly accessible production application hosted on Azure. |
 
 ---
 
@@ -108,6 +144,8 @@ The primary objective is to showcase a practical implementation of **Shift-Left 
 | Secret Scanning      | Gitleaks                         |
 | Container Security   | Trivy                            |
 | Version Control      | Git & GitHub                     |
+| Cloud Platform       | Microsoft Azure                  |
+| Deployment           | Azure Container Apps             |
 
 ---
 
@@ -156,9 +194,10 @@ secure-devsecops-pipeline/
 ├── LICENSE
 └── README.md
 
+```
 
 ## 🏗️ Project Architecture
-```
+
 
 ```mermaid
 flowchart TD
@@ -202,6 +241,44 @@ flowchart TD
     style J1 fill:#854F0B,color:#fff
     style K fill:#7C3AED,color:#fff
     style L fill:#3B6D11,color:#fff
+```
+### Cloud Deployment Architecture
+
+```mermaid
+flowchart TD
+
+    A([👨‍💻 Developer]) --> B([📦 GitHub Repository])
+    B --> C([⚙️ GitHub Actions])
+
+    C --> D([✅ Ruff])
+    C --> E([🧪 Pytest])
+    C --> F([🛡️ Bandit])
+    C --> G([📋 pip-audit])
+    C --> H([🔑 Gitleaks])
+
+    D & E & F & G & H --> I([🐳 Docker Build])
+
+    I --> J([🔬 Trivy])
+    J --> K([📤 Publish to GHCR])
+    K --> L([☁️ Azure Container Apps])
+    L --> M([✨ Live Website])
+
+    style A fill:#4B5563,color:#fff,stroke:#374151
+    style B fill:#7C3AED,color:#fff,stroke:#5B21B6
+    style C fill:#2563EB,color:#fff,stroke:#1D4ED8
+
+    style D fill:#0F6E56,color:#fff,stroke:#085041
+    style E fill:#0F6E56,color:#fff,stroke:#085041
+    style F fill:#854F0B,color:#fff,stroke:#713808
+    style G fill:#854F0B,color:#fff,stroke:#713808
+    style H fill:#854F0B,color:#fff,stroke:#713808
+
+    style I fill:#1D4ED8,color:#fff,stroke:#1E3A8A
+    style J fill:#854F0B,color:#fff,stroke:#713808
+    style K fill:#7C3AED,color:#fff,stroke:#5B21B6
+    style L fill:#0EA5E9,color:#fff,stroke:#0369A1
+    style M fill:#3B6D11,color:#fff,stroke:#27500A
+
 ```
 
 ```mermaid
@@ -404,24 +481,30 @@ docker run -p 5000:5000 ghcr.io/eshansahad/secure-devsecops-pipeline:latest
 
 ---
 
-# 🚀 Deployment
+# ☁️ Deployment
 
-The application is containerized using Docker and can be deployed to any OCI-compatible container platform.
+### Current Deployment
 
-### Current Deployment Target
+✅ GitHub Container Registry (GHCR)
 
-- GitHub Container Registry (GHCR)
+✅ Azure Container Apps
 
-### Future Deployment Targets
+### 🌍 Live Demo
 
-- Azure Container Apps
-- Azure Kubernetes Service (AKS)
-- Docker Swarm
-- Kubernetes Clusters
-- Amazon ECS
-- Google Cloud Run
+The application is automatically updated after every successful GitHub Actions workflow, demonstrating a complete Continuous Deployment pipeline.
 
-Deployment will be automated in future versions using Infrastructure as Code (Terraform) and GitOps workflows.
+https://secure-devsecops-app.blackfield-a8a2cad4.centralindia.azurecontainerapps.io
+
+### Continuous Deployment
+
+Every successful GitHub Actions workflow automatically:
+
+- Builds the Docker image
+- Runs security scans
+- Publishes the image to GHCR
+- Deploys the latest version to Azure Container Apps
+
+No manual deployment is required.
 
 ---
 
@@ -441,6 +524,8 @@ This project uses **GitHub Actions** to automate testing, security scanning, con
 | Docker Build        | Docker                    | Builds a production-ready container image                       |
 | Container Security  | Trivy                     | Scans the Docker image for OS and package vulnerabilities       |
 | Image Publishing    | GitHub Container Registry | Publishes the verified image to GHCR                            |
+| Cloud Deployment    | Azure Container Apps      | Automatically deploys the verified Docker image to Azure        |
+
 
 ---
 
@@ -448,78 +533,70 @@ This project uses **GitHub Actions** to automate testing, security scanning, con
 
 ```mermaid
 flowchart TD
-
     A([👨‍💻 Developer Push]) --> B([⚙️ GitHub Actions])
-
     B --> C[🔍 Code Quality & Security]
     B --> D[🔐 Secret Detection]
-
     C --> C1([✅ Ruff])
     C --> C2([🧪 Pytest])
     C --> C3([🛡️ Bandit])
     C --> C4([📋 pip-audit])
-
     D --> D1([🔑 Gitleaks])
-
     C1 & C2 & C3 & C4 & D1 --> E([🐳 Docker Build])
-
     E --> F[🔬 Container Security]
     F --> F1([🛡️ Trivy])
     F1 --> G([📤 Publish Docker Image])
     G --> H([🗂️ GitHub Container Registry])
+    H --> I([☁️ Azure Container Apps])
+    I --> J([✨ Live Website])
 
     style A fill:#4B5563,color:#fff,stroke:#374151
     style B fill:#2563EB,color:#fff,stroke:#1D4ED8
-
     style C fill:#854F0B,color:#fff,stroke:#713808
     style C1 fill:#0F6E56,color:#fff,stroke:#085041
     style C2 fill:#0F6E56,color:#fff,stroke:#085041
     style C3 fill:#854F0B,color:#fff,stroke:#713808
     style C4 fill:#854F0B,color:#fff,stroke:#713808
-
     style D fill:#854F0B,color:#fff,stroke:#713808
     style D1 fill:#854F0B,color:#fff,stroke:#713808
-
     style E fill:#1D4ED8,color:#fff,stroke:#1E3A8A
     style F fill:#854F0B,color:#fff,stroke:#713808
     style F1 fill:#854F0B,color:#fff,stroke:#713808
     style G fill:#7C3AED,color:#fff,stroke:#5B21B6
     style H fill:#3B6D11,color:#fff,stroke:#27500A
+    style I fill:#0EA5E9,color:#fff,stroke:#0369A1
+    style J fill:#3B6D11,color:#fff,stroke:#27500A
 ```
+
 
 ## 📋 Pipeline Execution Timeline
 
-```text
-Developer Push / Pull Request
-            │
-            ▼
-GitHub Actions Workflow
-            │
-            ▼
-Ruff (Linting)
-            │
-            ▼
-Pytest (Unit Tests)
-            │
-            ▼
-Bandit (SAST)
-            │
-            ▼
-pip-audit (Dependency Scan)
-            │
-            ▼
-Gitleaks (Secret Detection)
-            │
-            ▼
-Docker Image Build
-            │
-            ▼
-Trivy (Container Scan)
-            │
-            ▼
-Publish to GitHub Container Registry (GHCR)
-```
+```mermaid
+flowchart TD
+    A([👨‍💻 Developer Push / Pull Request]) --> B([⚙️ GitHub Actions Workflow])
+    B --> C([✅ Ruff — Linting])
+    C --> D([🧪 Pytest — Unit Tests])
+    D --> E([🛡️ Bandit — SAST])
+    E --> F([📋 pip-audit — Dependency Scan])
+    F --> G([🔑 Gitleaks — Secret Detection])
+    G --> H([🐳 Docker Image Build])
+    H --> I([🔬 Trivy — Container Scan])
+    I --> J([📤 Publish to GitHub Container Registry — GHCR])
+    J --> K([☁️ Azure Container Apps])
+    K --> L([✨ Live Website])
 
+    style A fill:#4B5563,color:#fff,stroke:#374151
+    style B fill:#2563EB,color:#fff,stroke:#1D4ED8
+    style C fill:#0F6E56,color:#fff,stroke:#085041
+    style D fill:#0F6E56,color:#fff,stroke:#085041
+    style E fill:#854F0B,color:#fff,stroke:#713808
+    style F fill:#854F0B,color:#fff,stroke:#713808
+    style G fill:#854F0B,color:#fff,stroke:#713808
+    style H fill:#1D4ED8,color:#fff,stroke:#1E3A8A
+    style I fill:#854F0B,color:#fff,stroke:#713808
+    style J fill:#7C3AED,color:#fff,stroke:#5B21B6
+    style K fill:#0EA5E9,color:#fff,stroke:#0369A1
+    style L fill:#3B6D11,color:#fff,stroke:#27500A
+```
 
 ---
 
@@ -574,6 +651,14 @@ After all quality and security checks pass, the verified Docker image is automat
 
 ---
 
+### 6. Azure Container Apps Deployment
+
+The final job logs into Microsoft Azure using a Service Principal and automatically deploys the latest Docker image from GitHub Container Registry to Azure Container Apps.
+
+This enables full Continuous Deployment (CD).
+
+---
+
 ## 🛡️ Security-First Approach
 
 This project follows the **Shift-Left Security** principle by integrating security checks early in the development lifecycle.
@@ -590,7 +675,7 @@ before being published.
 
 This reduces the risk of introducing vulnerabilities into production environments.
 
-## 📸 Project Demonstration
+## 📸 Project Gallery
 
 ### Application Running
 
@@ -632,6 +717,39 @@ This reduces the risk of introducing vulnerabilities into production environment
 
 ---
 
+### Azure Container App
+
+> Azure Container App successfully deployed and running.
+
+![Azure Container App](docs/screenshots/azure-container-app.png)
+
+---
+
+### Azure Resource Group
+
+> Contains the Azure Container Apps environment and associated resources for deployment.
+
+![Azure Resource Group](docs/screenshots/azure-resource-group.png)
+
+---
+
+### Azure Container Apps Environment
+
+> Azure Container Apps environment configured for automated deployment of the application.
+
+![Azure Container Apps Environment](docs/screenshots/azure-environment.png)
+
+---
+
+### Azure Live Website
+
+> Successfully deployed application running on Microsoft Azure.
+
+![Azure Deployment](docs/screenshots/azure-live.png)
+
+---
+
+
 # 📈 Project Outcomes
 
 This project demonstrates practical implementation of modern DevSecOps practices.
@@ -650,6 +768,9 @@ This project demonstrates practical implementation of modern DevSecOps practices
 * ✅ Trivy Container Security Scanning
 * ✅ GitHub Container Registry Publishing
 * ✅ Multi-job GitHub Actions Workflow
+* ✅ Azure Container Apps Deployment
+* ✅ Continuous Deployment (CD)
+* ✅ Live Cloud Application
 
 ---
 
@@ -665,23 +786,41 @@ Through this project, I gained hands-on experience with:
 * Managing Docker image artifacts across workflow jobs
 * Publishing secure container images to GitHub Container Registry
 * Applying DevSecOps best practices in a practical project
+* Deploying applications to Azure Container Apps
+* Implementing Continuous Deployment with GitHub Actions
+* Authenticating GitHub Actions to Azure
+* Building end-to-end CI/CD pipelines
 
 ---
 
 # 🚀 Future Improvements
 
-Planned enhancements include:
+* Terraform Infrastructure as Code
 
-* Deploy to Azure Container Apps
-* Deploy to Azure Kubernetes Service (AKS)
-* Infrastructure provisioning using Terraform
-* Kubernetes deployment manifests
-* Helm charts
-* SonarQube integration
-* SBOM generation using Syft
-* Image signing with Cosign
-* GitOps deployment using Argo CD
-* Monitoring with Prometheus & Grafana
+* Azure Kubernetes Service (AKS)
+
+* Helm Charts
+
+* Azure Monitor
+
+* Prometheus & Grafana
+
+* OpenID Connect Authentication
+
+* SBOM Generation
+
+* Cosign Image Signing
+
+* Dependabot
+
+---
+
+# 📌 Version History
+
+| Version | Description |
+|----------|-------------|
+| v1.0.0 | Initial Secure DevSecOps Pipeline |
+| v2.0.0 | Added Azure Container Apps and automated Continuous Deployment |
 
 ---
 
@@ -689,7 +828,7 @@ Planned enhancements include:
 
 **Eshan Sahad**
 
-Computer Engineering Student | Cloud & DevSecOps Enthusiast
+Computer Engineering Student | Cloud • DevSecOps • Azure Enthusiast
 
 GitHub:
 https://github.com/eshansahad
