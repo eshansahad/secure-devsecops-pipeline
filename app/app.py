@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, jsonify
 
 app = Flask(__name__)
@@ -14,7 +16,6 @@ def health():
 def version():
     return jsonify({"version": "1.0.0"})
 
-import os
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
