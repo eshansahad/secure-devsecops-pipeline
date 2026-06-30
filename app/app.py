@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "Welcome to Secure DevSecOps Pipeline - Azure CI/CD Verified 🚀"
+    return "Welcome to the Secure DevSecOps Pipeline Demo"
 
 @app.route("/health")
 def health():
